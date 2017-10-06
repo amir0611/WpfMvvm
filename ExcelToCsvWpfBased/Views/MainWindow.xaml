@@ -1,0 +1,48 @@
+﻿<Window x:Class="ExcelToCsvWpfBased.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:excelToCsvWpfBased="clr-namespace:ExcelToCsvWpfBased"
+        Title="MainWindow" Height="300" Width="650">
+    <Window.Resources>
+        <excelToCsvWpfBased:FileNameAndSheetOptionBooleanConverter x:Key="FileNameAndSheetOptionConverter"/>
+        <excelToCsvWpfBased:MainWindowViewModel x:Key="MyMainWindowViewModel"/>
+    </Window.Resources>
+    <Grid x:Name="MyGridPanel" DataContext="{Binding Source={StaticResource MyMainWindowViewModel}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+        
+        <Label x:Name="MyBrowseLabel" Content="Select Excel File" Grid.Row="0" Grid.Column="0" 
+               HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox x:Name="MyFileNameTextBox" Grid.Row="0" Grid.Column="1" 
+                 Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+        <Button x:Name="MyBrowseButton" Content="Browse" Command="{Binding BrowseFileCommand}" Grid.Row="0" Grid.Column="2" />
+
+        <Label x:Name="MyOutputPathLabel" Content="Save at" Grid.Row="1" Grid.Column="0" 
+               HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox x:Name="MyOutputPathTextBox" Grid.Row="1" Grid.Column="1" />
+        <Button x:Name="MyOutputPathBrowseButton" Content="Browse" Grid.Row="1" Grid.Column="2" />
+
+        <RadioButton x:Name="MyAllSheetsRadioButton" Grid.Row="2" Grid.Column="1" 
+                     Content="All sheets" IsEnabled="{Binding ElementName=MyFileNameTextBox, Path=Text.Length}" 
+                     IsChecked="{Binding IsAllSheet}"/>
+        <RadioButton x:Name="MySingleSheetRadioButton" Grid.Row="3" Grid.Column="1" 
+                     Content="Specific sheet" Command="{Binding SelectSingleSheetCommand}" 
+                     IsChecked="{Binding IsSingleSheet}"/>
+        <ComboBox x:Name="MySheetsComboBox" Grid.Row="3" Grid.Column="2" 
+                  IsEnabled="{Binding ElementName=MySingleSheetRadioButton,Path=IsChecked}" 
+                  ItemsSource="{Binding Sheets}" SelectedValue="{Binding SelectedSheet}"/>
+        <Button x:Name="MyConvertButton" Content="Convert" Grid.Row="5" Grid.Column="1" Command="{Binding ConvertToCsvCommand}"/>
+        <Button x:Name="MyCancelButton" Content="Cancel" Grid.Row="5" Grid.Column="2" Command="{Binding CancelCommand}"/>
+    </Grid>
+</Window>
